@@ -4531,7 +4531,7 @@
   ]
  },
  "_sync": {
-  "t": "2026-11-26T19:10:19Z",
-  "github": "OK (outil add_repo absent de la session, mais dépôt déjà cloné : git fetch et push --dry-run réussis)"
+  "t": "2026-11-26T20:22:00Z",
+  "github": "OK (outil add_repo absent de la session, mais dépôt déjà cloné et git fetch origin main réussi)"
  }
 }
