@@ -307,6 +307,39 @@ footer{background:#060e24}
 nav:not(.tabbar){padding-top:calc(10px + env(safe-area-inset-top))}
 @media(display-mode:standalone){html{-webkit-user-select:none;user-select:none}body{-webkit-tap-highlight-color:transparent}}
 .logo .mk{width:1.45em;height:1.45em;margin-right:.1em;transform:translateY(.14em)}
+
+/* ===== version épurée ===== */
+
+.hero{min-height:auto}
+.hero .wrap{padding-top:clamp(100px,14vh,150px)}
+.hero h1{font-size:clamp(46px,6.4vw,88px);margin:0}
+.kick{margin:0 0 6px;color:var(--lime);font-weight:600;text-transform:capitalize}
+.sh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.sh h2{margin:0;font-size:clamp(30px,4vw,44px)}
+.sh a{color:var(--sky);font-weight:600;text-decoration:none;white-space:nowrap}
+.today{display:grid;gap:8px}
+.tr{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--ink);cursor:pointer;font:inherit}
+.tr:hover{border-color:rgba(255,197,61,.45)}
+.tr:focus-visible,.tk[data-m]:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.tt{font:800 20px "Big Shoulders Display",sans-serif;color:var(--mute)}
+.tmid strong{display:block;font-size:16px;line-height:1.25}
+.tmid span{display:block;font-size:13.5px;color:var(--mute);margin-top:2px}
+.to{text-align:right}.to b{display:block;font:900 26px/1 "Big Shoulders Display",sans-serif;color:var(--lime)}.to i{font-style:normal;font-size:11.5px;color:var(--mute)}
+.tk[data-m]{cursor:pointer}
+.how{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.how summary{cursor:pointer;font-weight:700}
+.how ol{margin:12px 0 8px;padding-left:20px;display:grid;gap:8px}.how p{margin:8px 0 0;color:var(--mute);font-size:14.5px}
+.how.sm{background:none;border:0;padding:0}.how.sm summary{font:800 20px "Big Shoulders Display",sans-serif}
+.mc .tm{display:block;padding-top:14px}
+.mc .tm h3{margin:0;font-size:26px;line-height:1.05}
+.mc .tm h3{text-align:left!important}.mc .tm h3+h3{color:var(--mute)}
+.mc .fr{margin:8px 18px 0;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,84,112,.4);background:rgba(255,84,112,.08)}
+.fr small{display:block;color:#ff8da0;font-weight:600;font-size:12.5px}.fr span{font-weight:600}
+.fr b{font:900 24px "Big Shoulders Display",sans-serif;color:#ff8da0}
+.mc .more{background:none;border:0;color:var(--sky);font-weight:600;padding:12px 0 16px;margin-top:auto;text-align:left}
+.mc .more:hover{text-decoration:underline}
+.today{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
+@media(max-width:600px){.hero{padding-top:56px}.hero .wrap{padding-top:28px}.hero h1{font-size:46px}.sh h2{font-size:30px}}
 </style>
 </head>
 <body>
@@ -317,45 +350,46 @@ nav:not(.tabbar){padding-top:calc(10px + env(safe-area-inset-top))}
 
 <div class="view" id="v-accueil">
 <header class="hero" id="top">
-  <canvas id="scene" aria-hidden="true"></canvas>
-  <div class="wrap">
-    <div>
-      <h1>Avant d'ouvrir ton appli, passe par Goalio.</h1>
-      <p>Chaque jour, nos pronos sur toute l'Europe : fiables, fun, buteurs après les compos, combinés et montante. Avec la cote minimum à exiger sur Winamax, Betclic et les autres.</p>
-      <div class="cta"><a class="btn p" href="#pronos">Voir les pronos du jour</a><a class="btn g" href="#suivi">Suivre la montante</a></div>
-    </div>
-    <div class="tickets" id="tickets"></div>
-  </div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="wrap">
+<div><p class="kick" id="hdate"></p><h1>Les paris du jour</h1></div>
+<div class="tickets" id="tickets"></div>
+</div>
 </header>
 
-<section class="band" style="padding-bottom:0"><div class="wrap">
-  <h2>Pronos mis à jour</h2>
-  <p class="lead">On revérifie chaque match toutes les heures, de 11 h à 22 h : blessures, compos officielles, mouvements de cotes. Si l'info change, le prono change, et on te dit pourquoi.</p>
-  <div class="chlist" id="chlist"></div>
+<section class="band"><div class="wrap">
+<div class="sh"><h2>À jouer</h2><a href="#pronos">Tout voir</a></div>
+<div class="today" id="today"></div>
 </div></section>
 
-<section class="band" style="padding-bottom:0"><div class="wrap">
-  <h2>Trois étapes, trente secondes</h2>
-  <div class="steps">
-    <div class="st"><b>1</b><h3>Choisis ton match</h3><p>Filtre par jour et par championnat. Chaque carte te donne un prono fiable et un prono fun.</p></div>
-    <div class="st"><b>2</b><h3>Lis la cote mini</h3><p>C'est la cote en dessous de laquelle le pari ne vaut pas le coup selon nos calculs.</p></div>
-    <div class="st"><b>3</b><h3>Compare sur ton appli</h3><p>Si Winamax, Betclic ou Unibet proposent au moins cette cote, le pari a de la valeur. Sinon, passe ton tour.</p></div>
-  </div>
+<section class="band" id="chsec" hidden><div class="wrap">
+<div class="sh"><h2>Pronos modifiés</h2></div>
+<div class="chlist" id="chlist"></div>
+</div></section>
+
+<section class="band"><div class="wrap">
+<details class="how"><summary>Comment ça marche ?</summary>
+<ol>
+<li><b>Choisis un pari.</b> Le prono fiable passe le plus souvent ; le fun rapporte plus mais passe moins.</li>
+<li><b>Regarde la cote mini.</b> En dessous, le pari ne vaut pas le coup.</li>
+<li><b>Compare sur ton appli.</b> Si Winamax, Betclic ou une autre affiche autant ou plus, tu peux y aller.</li>
+</ol>
+<p>Les pronos sont revérifiés toutes les heures de 11 h à 22 h. Les paris buteurs arrivent avec les compos, environ 1 h avant le match.</p>
+</details>
 </div></section>
 
 </div>
 <div class="view" id="v-pronos"><section class="band"><div class="wrap">
   <h2 id="ptitle">Les pronos</h2>
-  <p class="lead">Un prono peut changer jusqu'au coup d'envoi si une info tombe (blessure, compo, cotes). Le changement est signalé sur la carte, avec l'ancien prono et la raison.</p>
-  <div class="bar1" id="days" role="toolbar" aria-label="Jour"></div>
+    <div class="bar1" id="days" role="toolbar" aria-label="Jour"></div>
   <div class="chips" id="lgs" role="toolbar" aria-label="Championnat"></div>
   <div class="grid" id="list"></div>
 </div></section>
 
 </div>
 <div class="view" id="v-buteurs"><section class="band"><div class="wrap">
-  <h2>Joueurs</h2>
-  <p class="lead">Les cotes joueurs sortent avec les compos officielles, environ 1 h avant le match. Avant ça, tu vois déjà qui surveiller et pourquoi.</p>
+  <h2>Paris joueurs</h2>
+  
   <div class="seg" id="seg" role="tablist">
     <button role="tab" data-s="but" aria-selected="true">Buteurs</button>
     <button role="tab" data-s="pas" aria-selected="false">Passeurs</button>
@@ -373,20 +407,20 @@ nav:not(.tabbar){padding-top:calc(10px + env(safe-area-inset-top))}
 </div>
 <div class="view" id="v-suivi"><section class="band"><div class="wrap">
   <h2>La montante</h2>
-  <p class="lead">On part de 10 € et on vise 200 €, en rejouant tout le gain à chaque étape sur un pari sûr autour de 1,30. Une seule erreur et on repart de zéro : ne mise que ce que tu acceptes de perdre.</p>
+  <p class="lead">De 10 € à 200 €, en rejouant tout le gain sur un pari sûr à chaque étape.</p>
   <div class="mont" id="mont"></div>
 </div></section>
 
 <section class="band" style="padding-top:0"><div class="wrap">
   <h2>Notre bilan</h2>
-  <p class="lead">Chaque prono publié est noté ici, gagné ou perdu, pour que tu juges sur pièces.</p>
+  
   <div id="bil"></div>
 </div></section>
 
 <footer class="band"><div class="wrap">
   <div><h3>Jouer comporte des risques</h3><p>Endettement, isolement, dépendance. Les paris sportifs sont interdits aux mineurs. Ne mise jamais plus que ce que tu peux te permettre de perdre.</p></div>
   <div><h3>Besoin d'aide ?</h3><p>Joueurs Info Service, appel non surtaxé :</p><p class="num">09 74 75 13 13</p></div>
-  <div><h3>Notre méthode</h3><p>Probabilités de victoire Sportradar pour les grands championnats, transformées par un modèle de buts (loi de Poisson) en plus de 40 marchés. Paris joueurs calculés à partir des buts et passes de la saison, uniquement pour les titulaires. Corners et cartons calculés à partir des moyennes des deux équipes sur leurs derniers matchs. Aucun prono n'est garanti.</p><p id="upd"></p></div>
+  <div><details class="how sm"><summary>Notre méthode</summary><p>Probabilités de victoire Sportradar pour les grands championnats, transformées par un modèle de buts (loi de Poisson) en plus de 40 marchés. Paris joueurs calculés à partir des buts et passes de la saison, uniquement pour les titulaires. Corners et cartons calculés à partir des moyennes des deux équipes sur leurs derniers matchs. Aucun prono n'est garanti.</p></details><p id="upd"></p></div>
 </div></footer>
 </div>
 
@@ -539,6 +573,7 @@ function pick(cls,lab,x){
   if(!x)return`<div class="pk n"><small>Match à joueurs</small><strong>Pas de probabilités 1N2 sur ce match : on mise sur les buteurs et passeurs après les compos.</strong></div>`;
   return`<div class="pk ${cls}"><small>${lab} · ${pc(x.p)}</small><strong>${esc(x.t)}</strong><div class="o"><b>${fx(x.o)}</b><span>cote mini</span></div></div>`;
 }
+function funRow(x){return`<div class="fr"><span><small>Prono fun · ${pc(x.p)}</small>${esc(x.t)}</span><b>${fx(x.o)}</b></div>`}
 function bar(m){return m.ph==null?'':`<div><div class="pb"><i class="h" style="width:${m.ph}%"></i><i class="x" style="width:${m.pd}%"></i><i class="a" style="width:${m.pa}%"></i></div><div class="pn"><span>${esc(m.h)} ${Math.round(m.ph)} %</span><span>Nul ${Math.round(m.pd)} %</span><span>${esc(m.a)} ${Math.round(m.pa)} %</span></div></div>`}
 function plLine(m){
   const P=players(m);if(!P.length)return'';
@@ -549,24 +584,24 @@ function plLine(m){
   return`<div class="pl">Compos officielles : ${ins.length?ins.slice(0,3).map(p=>`<b>${esc(p.n)}</b> buteur ${fx(p.mk[0].o)}`).join(' · '):'aucun de nos joueurs ciblés n\'est titulaire'}</div>`;
 }
 function renderTabs(){
-  const days=[...new Set(M.filter(m=>!done(m)).map(m=>dk(m.k)))].sort();
+  const days=[...new Set(M.filter(m=>m.ph!=null&&!done(m)).map(m=>dk(m.k)))].sort();
   if(!days.includes(day))day=days[0];
-  $('days').innerHTML=days.map(d=>{const x=M.find(m=>dk(m.k)===d).k;return`<button class="tab" data-d="${d}" aria-pressed="${d===day}">${d===dk(new Date())?'Aujourd\'hui':esc(dl(x))}</button>`}).join('');
-  const lgs=['all',...Object.keys(D.leagues).filter(k=>M.some(m=>m.lg===k&&dk(m.k)===day))];
+  $('days').innerHTML=days.map(d=>{const x=M.find(m=>m.ph!=null&&dk(m.k)===d).k;return`<button class="tab" data-d="${d}" aria-pressed="${d===day}">${d===dk(new Date())?'Aujourd\'hui':esc(dl(x))}</button>`}).join('');
+  const lgs=['all',...Object.keys(D.leagues).filter(k=>M.some(m=>m.ph!=null&&m.lg===k&&dk(m.k)===day))];
   if(!lgs.includes(lg))lg='all';
   $('lgs').innerHTML=lgs.map(k=>`<button class="chip" data-l="${k}" aria-pressed="${k===lg}">${k==='all'?'Tous les matchs':esc(D.leagues[k].name)}</button>`).join('');
   const x=M.find(m=>dk(m.k)===day);
   $('ptitle').textContent='Les pronos du '+(x?dlong(x.k):'jour');
 }
 function renderList(){
-  const ms=M.filter(m=>dk(m.k)===day&&(lg==='all'||m.lg===lg)&&!done(m)).sort((x,y)=>(y.star-x.star)||(x.k-y.k));
+  const ms=M.filter(m=>m.ph!=null&&dk(m.k)===day&&(lg==='all'||m.lg===lg)&&!done(m)).sort((x,y)=>(y.star-x.star)||(x.k-y.k));
   if(!ms.length){$('list').innerHTML='<p class="empty">Aucun match à venir pour ce choix.</p>';return}
   $('list').innerHTML=ms.map(m=>{
     const p=picks(m),L=D.leagues[m.lg],live=!m.tbc&&Date.now()>=m.k.getTime();
-    return`<article class="mc"><div class="mh"><span><b>${esc(L.name)}</b> · ${esc(L.country)}</span><span>${live?'En cours':tm(m.k)}</span></div>
-    <div class="tm"><h3>${esc(m.h)}</h3><i>vs</i><h3>${esc(m.a)}</h3></div>${bar(m)}
-    ${chgBox(m)}${pick('s','Prono fiable',p&&p.fia)}${p&&p.fia?appLine(m,p.fia):''}${p?pick('f','Prono fun',p.fun):''}${p&&p.fun?appLine(m,p.fun):''}${appBox(m)}${plLine(m)}
-    ${p||players(m).length?`<button class="more" data-m="${esc(m.id)}">${p?'Tous les paris du match ('+markets(m).length+')':'Voir les joueurs du match'}</button>`:''}</article>`;
+    return`<article class="mc"><div class="mh"><span>${esc(L.name)}</span><span>${live?'En cours':tm(m.k)}</span></div>
+    <div class="tm"><h3>${esc(m.h)}</h3><h3>${esc(m.a)}</h3></div>
+    ${chgBox(m)}${pick('s','Prono fiable',p.fia)}${appLine(m,p.fia)}${funRow(p.fun)}
+    <button class="more" data-m="${esc(m.id)}">Tous les paris du match</button></article>`;
   }).join('');
 }
 let seg='but';
@@ -658,7 +693,7 @@ function renderTickets(){
   let s=null,f=null;
   td.forEach(m=>{const p=picks(m);if(!s||p.fia.p>s.x.p)s={m,x:p.fia};if(!f||p.fun.p>f.x.p)f={m,x:p.fun}});
   const mo=D.montante,st=mo&&mo.steps[mo.steps.length-1];
-  const t=(c,lab,o)=>o?`<div class="tk ${c}"><small>${lab}</small><strong>${esc(o.x.t)}<span>${esc(o.m.h)} – ${esc(o.m.a)} · ${esc(dl(o.m.k))} ${tm(o.m.k)}</span></strong><b>${fx(o.x.o)}</b></div>`:'';
+  const t=(c,lab,o)=>o?`<div class="tk ${c}" role="button" tabindex="0" data-m="${esc(o.m.id)}"><small>${lab}</small><strong>${esc(o.x.t)}<span>${esc(o.m.h)} – ${esc(o.m.a)} · ${esc(dl(o.m.k))} ${tm(o.m.k)}</span></strong><b>${fx(o.x.o)}</b></div>`:'';
   $('tickets').innerHTML=t('s','Le prono sûr',s)+t('f','Le coup fun',f)+(st?`<div class="tk m"><small>Montante · étape ${mo.steps.length}</small><strong>${esc(st[2])}<span>${esc(st[1])}</span></strong><b>${fx(st[3])}</b></div>`:'');
 }
 function openDrawer(id){
@@ -699,6 +734,17 @@ function appLine(m,x){const a=app(m,x.t);if(!a.length)return'';const b=a.reduce(
 function appBox(m){const A=(D.appodds||{})[m.id]||[];if(!A.length)return'';const p=picks(m),shown=new Set([p&&p.fia&&p.fia.t,p&&p.fun&&p.fun.t]);const rest=A.filter(x=>!shown.has(x.m));if(!rest.length)return'';
   const M=markets(m);return`<div class="apx"><small>Cotes relevées sur les applis</small>${rest.slice(0,4).map(x=>{const mm=M.find(y=>y.t===x.m),ok=mm&&x.o>=mm.o;return`<div><span>${esc(x.m)}</span><span>${esc(x.bk)}</span><b class="${ok?'ok':''}">${fx(x.o)}</b></div>`}).join('')}</div>`}
 
+function renderHome(){
+  const now=new Date();$('hdate').textContent=now.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',timeZone:TZ});
+  const fut=M.filter(m=>m.ph!=null&&Date.now()<KO(m)).sort((x,y)=>x.k-y.k);
+  const d0=fut.length?dk(fut[0].k):null,td=fut.filter(m=>dk(m.k)===d0);
+  const lab=d0===dk(now)?"aujourd'hui":(fut.length?dlong(fut[0].k):'');
+  document.querySelector('#v-accueil .sh h2').textContent='À jouer '+lab;
+  $('today').innerHTML=td.length?td.slice(0,12).map(m=>{const p=picks(m),x=p.fia,a=app(m,x.t),b=a.length?a.reduce((u,v)=>v.o>u.o?v:u):null;
+    return`<button class="tr" data-m="${esc(m.id)}"><span class="tt">${tm(m.k)}</span><span class="tmid"><strong>${esc(x.t)}</strong><span>${esc(m.h)} – ${esc(m.a)}</span></span><span class="to"><b>${fx(x.o)}</b><i>${b?esc(b.bk)+' '+fx(b.o):'cote mini'}</i></span></button>`}).join('')
+    :'<p class="seg-empty">Pas de match à venir pour le moment. Reviens demain matin.</p>';
+}
+
 function chg(id){const c=(D.changes||{})[id];return c&&c.length?c[c.length-1]:null}
 function chgBox(m){const c=chg(m.id);if(!c)return'';const p=picks(m),now=p&&p.fia?p.fia.t:'';
   const same=!c.before||!c.before.fia||c.before.fia===now;
@@ -706,12 +752,13 @@ function chgBox(m){const c=chg(m.id);if(!c)return'';const p=picks(m),now=p&&p.fi
 function renderChanges(){
   const rows=[];MA.forEach(m=>{if(done(m))return;((D.changes||{})[m.id]||[]).forEach(c=>rows.push({m,c}))});
   rows.sort((a,b)=>new Date(b.c.t)-new Date(a.c.t));
+  $('chsec').hidden=!rows.length;
   $('chlist').innerHTML=rows.length?rows.slice(0,8).map(({m,c})=>{const p=picks(m),now=p&&p.fia?p.fia.t:'';const same=!c.before||!c.before.fia||c.before.fia===now;
     return`<button class="chr" data-m="${esc(m.id)}"><span class="cht">${tm(new Date(c.t))}</span><span class="chm"><strong>${esc(m.h)} – ${esc(m.a)}</strong><span>${same?'Prono confirmé':`<s>${esc(c.before.fia)}</s> → ${esc(now)}`}</span><em>${esc(c.why)}</em></span></button>`}).join('')
     :'<p class="seg-empty">Aucun changement pour l\'instant : tous les pronos du jour tiennent. Prochaine vérification à l\'heure pile.</p>';
 }
 
-function render(){renderChanges();renderTabs();renderTickets();renderList();renderPlayers();renderCombos();renderMont();renderBilan()}
+function render(){renderHome();renderChanges();renderTabs();renderTickets();renderList();renderPlayers();renderCombos();renderMont();renderBilan()}
 document.addEventListener('click',e=>{
   const sg=e.target.closest('[data-s]');if(sg){seg=sg.dataset.s;renderPlayers();return}
   const t=e.target.closest('[data-d],[data-l],[data-m]');if(!t)return;
@@ -785,6 +832,7 @@ function route(){
   if(v==='accueil')window.dispatchEvent(new Event('resize'));
 }
 try{addEventListener('hashchange',route);route()}catch(e){}
+try{document.addEventListener('click',e=>{const b=e.target.closest('.tr,.tk[data-m]');if(b)openDrawer(b.dataset.m)});document.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=e.target.closest&&e.target.closest('.tk[data-m]');if(b)openDrawer(b.dataset.m)}})}catch(e){}
 window.__cdp={picks,markets,players,all:()=>M,day:dk};
 scene3d();
 try{if('serviceWorker' in navigator&&window.top===window.self)navigator.serviceWorker.register('sw.js')}catch(e){}
