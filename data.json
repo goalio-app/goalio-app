@@ -1,6 +1,6 @@
 {
  "_format": "matches: [id, ligue, coup d'envoi UTC, domicile, exterieur, %dom|null (Sportradar, sinon cotes 1N2 des bookmakers converties en probabilités sans marge, sinon null), %nul|null, %ext|null, affiche 0/1, heure_a_confirmer 0/1, buteurs_seulement 0/1 (1 = match visible uniquement dans l onglet Buteurs, pas dans les pronos) (1 = heure inconnue, coup d envoi mis à 11:00Z du jour en attendant ; remplacer par l heure réelle et retirer le 1 dès qu elle est connue)]. watch: {id: [[joueur, equipe, part_des_buts_equipe]] ou [[joueur, equipe, buts|null, passes|null, matchs]]}. lineups: {id: {\"starters\": [noms des titulaires]}} -> les paris joueurs ne s'affichent qu'une fois les titulaires connus. montante: steps [date, match, pari, cote, resultat null|1|0]. history: [date, match, pari, cote, type fiable|fun|joueur|combine, resultat 1|0]. published: {id: {match, kickoff, fia:[pari,cote,proba], fun:[...]}} pronos figés pour le bilan. changes: {id: [{t: heure ISO UTC, why: une phrase en français avec le fait concret (qui est absent, quelle cote a bougé de X à Y), before: {fia: ancien prono fiable, fun: ancien prono fun}}]} -> historique des pronos modifiés ou confirmés avant le coup d envoi ; le site affiche le dernier sur la carte et tout l historique dans le détail du match. appodds: {id: [{m: libellé EXACT du marché sur le site (voir tools/list_markets.js), o: cote, bk: Winamax|Betclic|Unibet|PMU|Parions Sport|bet365, d: date du relevé AAAA-MM-JJ, src: source}]} -> vraies cotes des applis françaises, relevées sur des sources qui nomment le bookmaker ; jamais estimées.",
- "updated": "2026-11-26T10:11:46Z",
+ "updated": "2026-11-26T17:05:26Z",
  "source": "Sportradar et cotes bookmakers / modèles publics (DRatings) pour les coupes d'Europe · stats joueurs : ESPN (saison 2026-27)",
  "leagues": {
   "UCL": {
@@ -3855,7 +3855,242 @@
    ]
   ]
  },
- "lineups": {},
+ "lineups": {
+  "x1": {
+   "starters": [
+    "Kotarski",
+    "Goda",
+    "McKenna",
+    "Dominguez",
+    "Valincic",
+    "Misic",
+    "Kacavenda",
+    "Stojkovic",
+    "Orsic",
+    "Dion Beljo",
+    "Lisica",
+    "Flekken",
+    "Gutierrez",
+    "Medina",
+    "Bade",
+    "Quansah",
+    "Garcia",
+    "Andrich",
+    "Diaby",
+    "Tillman",
+    "Maza",
+    "Schick"
+   ]
+  },
+  "x2": {
+   "starters": [
+    "Ortega",
+    "Smajlović",
+    "Pirola",
+    "Gustavo Sá",
+    "Gelson Martins",
+    "Freuler",
+    "João Silva",
+    "Pedersen",
+    "González",
+    "Retsos",
+    "Onyemaechi",
+    "Maignan",
+    "Gila",
+    "De Winter",
+    "Diawara",
+    "Estupiñán",
+    "Jashari",
+    "Rabiot",
+    "Hutchinson",
+    "Alphadjo Cisse",
+    "Moreira",
+    "Gonçalo Ramos"
+   ]
+  },
+  "x3": {
+   "starters": [
+    "Doğan",
+    "Taylan",
+    "Djalo",
+    "Emirhan",
+    "Ouattara",
+    "Salih",
+    "Ndidi",
+    "Orkun",
+    "Cerny",
+    "İlhan",
+    "Oh",
+    "Wolff",
+    "Mizrahi",
+    "Diop",
+    "Vitor",
+    "Amador",
+    "Ahmad",
+    "Yehoshuha",
+    "Forson",
+    "Abu Rumi",
+    "Malede",
+    "Zlatanovic"
+   ]
+  },
+  "x4": {
+   "starters": [
+    "Ter Stegen",
+    "Kehrer",
+    "Janse",
+    "Blind",
+    "Wijndal",
+    "Amrabat",
+    "Ouazane",
+    "Brandt",
+    "Bounida",
+    "Marcos Leonardo",
+    "Edvardsen",
+    "Steffen",
+    "Fehr",
+    "Bamert",
+    "Bürki",
+    "Mambwa",
+    "Reichmuth",
+    "Käit",
+    "Roth",
+    "Maier",
+    "Labeau",
+    "Dursun"
+   ]
+  },
+  "x11": {
+   "starters": [
+    "Wiegele",
+    "Gabriel",
+    "Paliscak",
+    "Dweh",
+    "Prebsl",
+    "Doski",
+    "Cerv",
+    "Hrosovsky",
+    "Kabongo",
+    "Memic",
+    "Adu",
+    "Trubin",
+    "Banjaqui",
+    "Tomás Araújo",
+    "Circati",
+    "El Karouani",
+    "Barrenechea",
+    "Manu Silva",
+    "Lukebakio",
+    "Rafa Silva",
+    "Kaminski",
+    "Pavlidis"
+   ]
+  },
+  "x12": {
+   "starters": [
+    "Koffi",
+    "De Roeve",
+    "Sykes",
+    "Sylla",
+    "Patris",
+    "Zorgane",
+    "Van de Perre",
+    "Zeneli",
+    "Florucz",
+    "Guilherme Smith",
+    "Rodriguez",
+    "Lis",
+    "Mońka",
+    "Yegbe",
+    "Skrzypczak",
+    "Gurgul",
+    "Gumny",
+    "Berggren",
+    "Kozubal",
+    "Palma",
+    "Bengtsson",
+    "Agnero"
+   ]
+  },
+  "x13": {
+   "starters": [
+    "Zawieschitzky",
+    "Morgalla",
+    "Drexler",
+    "Zabransky",
+    "Krätzig",
+    "Biabate",
+    "Mazurek",
+    "Baidoo",
+    "Lindstrøm",
+    "Vertessen",
+    "Diakité",
+    "Nersesyan",
+    "Hugo Oliveira",
+    "Malis",
+    "Bruno Wilson",
+    "Edgar Grigoryan",
+    "Carlier",
+    "Balanta",
+    "Muradyan",
+    "Serobyan",
+    "Ndour",
+    "Shaghoyan"
+   ]
+  },
+  "x14": {
+   "starters": [
+    "De Lange",
+    "Bezahaf",
+    "Egan-Riley",
+    "Aguerd",
+    "Garcia",
+    "Hojbjerg",
+    "Gomes",
+    "Abdallah",
+    "Abdelli",
+    "Paixao",
+    "Gouiri",
+    "Vutsov",
+    "Serafimov",
+    "Dimitrov",
+    "Makoun",
+    "Neves",
+    "Bouras",
+    "Grujic",
+    "Moubarik",
+    "Alex Centelles",
+    "Oko-Flex",
+    "Reinaldo"
+   ]
+  },
+  "x15": {
+   "starters": [
+    "Radu",
+    "Javi Rodríguez",
+    "Yoel Lago",
+    "Marcos Alonso",
+    "Javi Rueda",
+    "Burcio",
+    "Febas",
+    "Carreira",
+    "Iago Aspas",
+    "Driouech",
+    "Pablo Durán",
+    "Di Gregorio",
+    "António Silva",
+    "Hill",
+    "Diakité",
+    "Julio Soler",
+    "Cook",
+    "Scott",
+    "Adli",
+    "Brooks",
+    "Kluivert",
+    "Álvaro Rodríguez"
+   ]
+  }
+ },
  "montante": {
   "start": 10,
   "target": 200,
@@ -4151,6 +4386,27 @@
     "bk": "PMU",
     "d": "2026-11-26",
     "src": "SportyTrader"
+   },
+   {
+    "m": "Victoire Marseille",
+    "o": 1.35,
+    "bk": "Betclic",
+    "d": "2026-11-26",
+    "src": "Flashscore"
+   },
+   {
+    "m": "Match nul",
+    "o": 4.35,
+    "bk": "Betclic",
+    "d": "2026-11-26",
+    "src": "Flashscore"
+   },
+   {
+    "m": "Victoire Levski Sofia",
+    "o": 6.4,
+    "bk": "Betclic",
+    "d": "2026-11-26",
+    "src": "Flashscore"
    }
   ],
   "x6": [
