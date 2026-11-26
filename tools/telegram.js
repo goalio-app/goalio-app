@@ -18,8 +18,17 @@ const fx=o=>(+o).toFixed(2).replace('.',',');
 const hm=d=>d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:TZ}).replace(':','h');
 const day=d=>d.toLocaleDateString('fr-FR',{timeZone:TZ});
 const wd=d=>d.toLocaleDateString('fr-FR',{weekday:'long',timeZone:TZ});
-const FOOT='\n\n<i>🔞 18+ · Jouer comporte des risques : endettement, dépendance… 09 74 75 13 13</i>';
-const LINK=t=>`\n\n👉 <a href="${URL}">${t}</a>`;
+const FOOT="\n\n<i>18+. Jouer comporte des risques : endettement, dépendance… Besoin d'aide : 09 74 75 13 13.</i>";
+// petite variation de formulation, stable pour un même message
+const pickv=(arr,seed)=>{let h=0;for(const c of String(seed))h=(h*31+c.charCodeAt(0))>>>0;return arr[h%arr.length]};
+const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
+// mettre un pari dans une phrase : « Victoire Lens » -> « la victoire de Lens », « Plus de 2,5 buts » -> « plus de 2,5 buts »
+const lc=t=>{t=String(t);
+  if(/^Victoire /.test(t))return 'la victoire de '+t.slice(9);
+  if(/^Match nul/.test(t))return 'le nul';
+  if(/^(Plus|Moins|Les|But|Exactement|Prochain|Aucun|Mi-temps|Score|Premier|Dernier|Buteur|Passeur|Doublé|Décisif)\b/.test(t))return t.charAt(0).toLowerCase()+t.slice(1);
+  return t};
+const LINK=t=>`\n\n<a href="${URL}">${t}</a>`;
 const stateFile=process.env.STATE||'telegram_state.json';
 const state=Object.assign({daily:null,sent:[]},fs.existsSync(stateFile)?JSON.parse(fs.readFileSync(stateFile,'utf8')):{});
 if(state.changes){state.sent=(state.sent||[]).concat(state.changes.map(k=>'chg|'+k));delete state.changes}
@@ -34,77 +43,76 @@ const short=m=>`${e(m.h)} – ${e(m.a)}`;
 setTimeout(async()=>{
   const C=window.__cdp,now=new Date(),all=C.all();
   const fut=all.filter(m=>m.ph!=null&&!m.bo&&Date.now()<m.k.getTime()).sort((a,b)=>a.k-b.k);
+  const today0=day(now);
   const out=[];
   if(mode==='daily'||mode==='results'){
-    // Résultats : chaque prono noté dans history (gagné 1 / perdu 0), publié une seule fois
     const H=(data.history||[]).filter(r=>r&&r.length>=6&&(r[5]===1||r[5]===0));
     const keyOf=r=>'res|'+r[0]+'|'+r[1]+'|'+r[2];
     const fresh=H.filter(r=>!sent.has(keyOf(r))&&/fiable|fun/.test(String(r[4])));
     if(fresh.length){
-      const ok=fresh.filter(r=>r[5]===1).length,sf=fresh.filter(r=>/fiable/.test(r[4])),fn=fresh.filter(r=>/fun/.test(r[4]));
-      const line=r=>`${r[5]===1?'✅':'❌'} ${e(r[2])} @${fx(r[3])} <i>· ${e(r[1])}</i>`;
-      const order=[...fresh].sort((a,b)=>b[5]-a[5]||b[3]-a[3]);
-      let t=`📊 <b>Résultats d'hier : ${ok}/${fresh.length}</b>`;
-      const best=order.find(r=>r[5]===1&&r[3]>=2.5);
-      if(best)t+=`
-🔥 Le fun est passé : <b>${e(best[2])} @${fx(best[3])}</b>`;
-      t+=`
-
-`+order.slice(0,10).map(line).join('\n')+(order.length>10?`\n… et ${order.length-10} autres sur l'appli`:'');
+      const won=fresh.filter(r=>r[5]===1),lost=fresh.filter(r=>r[5]===0),n=fresh.length,ok=won.length;
+      const best=[...won].sort((a,b)=>b[3]-a[3])[0];
+      const mood=ok/n>=.7?pickv(['Belle soirée hier.','Grosse soirée hier, ça a bien tourné.','Hier soir ça a souri.'],today0)
+        :ok/n>=.45?pickv(['Soirée correcte hier, sans plus.','Hier c\'était moyen, mais on reste dans le vert sur les sûrs.','Hier, du bon et du moins bon.'],today0)
+        :pickv(['Hier c\'était pas notre soir, je vous le cache pas.','Soirée compliquée hier.','Hier ça n\'a pas voulu, ça arrive.'],today0);
+      let t=`${mood} Bilan : ${ok} sur ${n}.`;
+      if(best&&best[3]>=2.5)t+=`\n${pickv(['Le coup fun est passé','Le pari fun est rentré','Mention spéciale au fun'],today0)} : ${e(lc(best[2]))} sur ${e(best[1])}, à ${fx(best[3])}.`;
+      const ln=r=>`${e(r[2])} (${e(r[1])}, ${fx(r[3])})`;
+      if(won.length)t+=`\n\nGagnés :\n`+won.slice(0,8).map(r=>'– '+ln(r)).join('\n');
+      if(lost.length)t+=`\n\nPerdus :\n`+lost.slice(0,8).map(r=>'– '+ln(r)).join('\n');
       const tot=H.filter(r=>/fiable|fun/.test(String(r[4]))),tw=tot.filter(r=>r[5]===1).length;
-      const pct=a=>a.length?Math.round(100*a.filter(r=>r[5]===1).length/a.length)+' %':'–';
-      t+=`
-
-🟡 Sûrs : ${sf.filter(r=>r[5]===1).length}/${sf.length} · 🔴 Fun : ${fn.filter(r=>r[5]===1).length}/${fn.length}`;
-      if(tot.length>fresh.length)t+=`
-📈 Depuis le début : ${tw}/${tot.length} (${pct(tot)})`;
-      t+=`
-
-On publie tout, même quand ça perd.`+FOOT;
+      if(tot.length>fresh.length)t+=`\n\nDepuis le début : ${tw} sur ${tot.length}, soit ${Math.round(100*tw/tot.length)} %.`;
+      t+=`\n\n${pickv(['Je mets tout ici, même quand ça perd.','Comme toujours, je publie tout, gagné ou perdu.','Rien de caché : tout est là.'],today0+'r')}`+FOOT;
       await send(t);fresh.forEach(r=>sent.add(keyOf(r)));
     }else console.log('Pas de nouveaux résultats.');
   }
   if(mode==='daily'){
-    const today=fut.filter(m=>day(m.k)===day(now));
-    if(!today.length||state.daily===day(now)){console.log('Paris du jour : rien à publier (pas de match ou déjà fait).')}
+    const today=fut.filter(m=>day(m.k)===today0);
+    if(!today.length||state.daily===today0)console.log('Paris du jour : rien à publier.');
     else{
-    let sure=null,fun=null;today.forEach(m=>{const p=C.picks(m);if(!sure||p.fia.p>sure.x.p)sure={m,x:p.fia};if(!fun||p.fun.p>fun.x.p)fun={m,x:p.fun}});
-    const big=today.find(m=>m.star)||today[0];
-    const lgs=[...new Set(today.map(m=>data.leagues[m.lg].name))];
-    const mo=data.montante,st=mo&&mo.steps&&mo.steps[mo.steps.length-1];
-    let t=`⚽ <b>${e(wd(now)[0].toUpperCase()+wd(now).slice(1))} : ${today.length} matchs au programme</b>\n${e(lgs.slice(0,3).join(', '))}${lgs.length>3?'…':''}\n\nNos 3 coups du jour 👇\n\n`;
-    t+=`🟡 <b>LE SÛR</b> · ${e(sure.x.t)} <b>@${fx(sure.x.o)}</b>\n<i>${short(sure.m)} · ${hm(sure.m.k)}</i>\n\n`;
-    t+=`🔴 <b>LE FUN</b> · ${e(fun.x.t)} <b>@${fx(fun.x.o)}</b>\n<i>${short(fun.m)} · ${hm(fun.m.k)}</i>`;
-    if(st&&st[4]==null&&st[0]===now.toISOString().slice(0,10))t+=`\n\n📈 <b>MONTANTE</b> · étape ${mo.steps.length} · ${e(st[2])} <b>@${fx(st[3])}</b>`;
-    else if(big&&big!==sure.m&&big!==fun.m){const p=C.picks(big);t+=`\n\n⭐ <b>L'AFFICHE</b> · ${short(big)} (${hm(big.k)})\n${e(p.fia.t)} <b>@${fx(p.fia.o)}</b>`}
-    t+=`\n\n🎯 Les buteurs arrivent ici dès que les compos tombent.`+LINK('Tous les pronos')+FOOT;
-    await send(t);state.daily=day(now);}
+      let sure=null,fun=null;today.forEach(m=>{const p=C.picks(m);if(!sure||p.fia.p>sure.x.p)sure={m,x:p.fia};if(!fun||p.fun.p>fun.x.p)fun={m,x:p.fun}});
+      const big=today.find(m=>m.star&&m!==sure.m&&m!==fun.m);
+      const lgs=[...new Set(today.map(m=>data.leagues[m.lg].name))];
+      const soir=today.every(m=>+hm(m.k).slice(0,2)>=18);
+      const mo=data.montante,st=mo&&mo.steps&&mo.steps[mo.steps.length-1];
+      const hello=pickv(['Salut à tous,','Hello tout le monde,','Bonjour à tous,','Salut la team,'],today0);
+      const prog=lgs.length===1?`${today.length} matchs de ${lgs[0]} ${soir?'ce soir':'aujourd\'hui'}`:`${today.length} matchs ${soir?'ce soir':'aujourd\'hui'} (${lgs.slice(0,3).join(', ')}${lgs.length>3?'…':''})`;
+      let t=`${hello}\n${cap(prog)}. ${pickv(['Voilà ce que je joue :','Voici ce que je retiens :','Mes choix du jour :'],today0)}\n\n`;
+      t+=`${pickv(['Le plus sûr','Mon pari sûr','Le safe du jour'],today0)} : <b>${e(sure.x.t)}</b> sur ${short(sure.m)} (${hm(sure.m.k)}), à prendre à ${fx(sure.x.o)} minimum.\n\n`;
+      t+=`${pickv(['Le petit coup','Pour le fun','Le coup à cote'],today0)} : <b>${e(fun.x.t)}</b> sur ${short(fun.m)} (${hm(fun.m.k)}), ${fx(fun.x.o)} minimum.`;
+      if(st&&st[4]==null&&st[0]===now.toISOString().slice(0,10))t+=`\n\nMontante, étape ${mo.steps.length} : ${e(st[2])}, à ${fx(st[3])}.`;
+      else if(big){const p=C.picks(big);t+=`\n\nEt je garde un œil sur ${short(big)} : ${e(lc(p.fia.t))}, ${fx(p.fia.o)}.`}
+      t+=`\n\n${pickv(['Je vous envoie les buteurs dès que les compos tombent.','Les buteurs arrivent avec les compos, restez dans le coin.','Pour les buteurs, j\'attends les compos et je reviens.'],today0)}`;
+      t+=LINK('Tous mes pronos du jour sur l\'appli')+FOOT;
+      await send(t);state.daily=today0;
+    }
   }else if(mode==='push'){
     // 1) compos tombées -> paris joueurs
     all.filter(m=>Date.now()<m.k.getTime()&&(data.lineups||{})[m.id]).forEach(m=>{
       const key='lu|'+m.id;if(sent.has(key))return;
       const P=C.players(m).filter(p=>p.st==='in');if(!P.length)return;
-      const best=(lab)=>P.map(p=>({p,x:p.mk.find(k=>k.t===lab)})).filter(o=>o.x).sort((a,b)=>b.x.p-a.x.p)[0];
+      const best=lab=>P.map(p=>({p,x:p.mk.find(k=>k.t===lab)})).filter(o=>o.x).sort((a,b)=>b.x.p-a.x.p)[0];
       const b=best('Buteur'),a=best('Passeur décisif'),c=best('Décisif 2 fois ou plus')||best('Doublé (2 buts ou plus)');
-      let t=`📋 <b>Compos tombées</b> · ${short(m)} (${hm(m.k)})\n`;
-      if(b)t+=`\n🎯 Buteur : <b>${e(b.p.n)}</b> @${fx(b.x.o)}`;
-      if(a&&(!b||a.p.n!==b.p.n||P.length===1))t+=`\n🅰️ Passeur : <b>${e(a.p.n)}</b> @${fx(a.x.o)}`;
-      if(c)t+=`\n💥 Le coup : <b>${e(c.p.n)}</b> ${c.x.t==='Doublé (2 buts ou plus)'?'doublé':'décisif 2 fois'} @${fx(c.x.o)}`;
+      let t=`${pickv(['Compos officielles pour','Les compos sont tombées pour','Compos dispo pour'],m.id)} ${short(m)} (${hm(m.k)}).`;
+      if(b)t+=`\n\n${e(b.p.n)} est titulaire, ${pickv(['je le prends buteur','je le joue buteur','je pars sur lui buteur'],m.id)} : ${fx(b.x.o)} minimum.`;
+      if(a&&(!b||a.p.n!==b.p.n))t+=`\nPour le passeur, ${e(a.p.n)}, ${fx(a.x.o)}.`;
+      if(c)t+=`\nEt pour ceux qui aiment le risque : ${e(c.p.n)} ${c.x.t==='Doublé (2 buts ou plus)'?'qui met un doublé':'décisif deux fois'}, ${fx(c.x.o)}.`;
       out.push({key,t:t+LINK('Tous les paris joueurs')+FOOT});
     });
     // 2) paris en direct
     Object.entries(data.live||{}).forEach(([id,L])=>{const m=all.find(x=>x.id===id);if(!m)return;
       (L||[]).forEach(l=>{const key='lv|'+id+'|'+l.t;if(sent.has(key)||Date.now()-new Date(l.t)>40*60e3)return;
-        let t=`🔴 <b>EN DIRECT ${l.min}'</b> · ${e(m.h)} <b>${e(l.score)}</b> ${e(m.a)}\n`;
-        if(l.why)t+=`<i>${e(l.why)}</i>\n`;
-        if(l.fia)t+=`\n✅ ${e(l.fia.t)} @${fx(l.fia.o)}`;
-        if(l.fun)t+=`\n🎲 ${e(l.fun.t)} @${fx(l.fun.o)}`;
-        out.push({key,t:t+`\n\n⏱ Ça bouge vite : prends-le seulement si ton appli paie au moins cette cote.`+FOOT});
+        let t=`${l.min}e minute, ${e(m.h)} ${e(l.score)} ${e(m.a)}.`;
+        if(l.why)t+=` ${e(l.why)}`;
+        if(l.fia)t+=`\n\nJe prends <b>${e(lc(l.fia.t))}</b> si votre appli paie au moins ${fx(l.fia.o)}.`;
+        if(l.fun)t+=`\nPlus osé : ${e(lc(l.fun.t))}, ${fx(l.fun.o)}.`;
+        t+=`\n\n${pickv(['En live ça bouge vite, vérifiez la cote avant.','Attention, les cotes live changent vite.','Allez-y seulement si la cote est encore là.'],key)}`;
+        out.push({key,t:t+FOOT});
       })});
     // 3) pronos modifiés
     fut.forEach(m=>((data.changes||{})[m.id]||[]).forEach(c=>{const key='chg|'+m.id+'|'+c.t;if(sent.has(key))return;
       const p=C.picks(m),same=!c.before||!c.before.fia||c.before.fia===p.fia.t;if(same)return;
-      out.push({key,t:`🔄 <b>On change !</b> ${short(m)} (${hm(m.k)})\n<s>${e(c.before.fia)}</s> → <b>${e(p.fia.t)}</b> @${fx(p.fia.o)}\n<i>${e(c.why)}</i>`+FOOT});
+      out.push({key,t:`${pickv(['Petit changement sur','Je change mon prono sur','Mise à jour sur'],key)} ${short(m)} (${hm(m.k)}).\nJe ne joue plus « ${e(c.before.fia)} », je passe sur <b>${e(p.fia.t)}</b>, ${fx(p.fia.o)} minimum.\n\nPourquoi : ${e(c.why.charAt(0).toLowerCase()+c.why.slice(1))}`+FOOT});
     }));
     for(const o of out){await send(o.t);sent.add(o.key)}
     if(!out.length)console.log('Rien de nouveau.');

@@ -340,6 +340,12 @@ nav:not(.tabbar){padding-top:calc(10px + env(safe-area-inset-top))}
 .mc .more:hover{text-decoration:underline}
 .today{grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr))}
 @media(max-width:600px){.hero{padding-top:56px}.hero .wrap{padding-top:28px}.hero h1{font-size:46px}.sh h2{font-size:30px}}
+
+.tgband{padding-top:0}
+.tgj{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;border-radius:14px;background:linear-gradient(90deg,rgba(79,227,211,.14),rgba(79,227,211,.05));border:1px solid rgba(79,227,211,.4);color:var(--ink);text-decoration:none}
+.tgj strong{display:block;font-size:16px}.tgj span span{display:block;font-size:13.5px;color:var(--mute);margin-top:2px}
+.tgj b{flex:none;background:var(--sky);color:#04201d;border-radius:10px;padding:10px 14px;font-size:14px}
+.tgj:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -360,6 +366,10 @@ nav:not(.tabbar){padding-top:calc(10px + env(safe-area-inset-top))}
 <section class="band"><div class="wrap">
 <div class="sh"><h2>À jouer</h2><a href="#pronos">Tout voir</a></div>
 <div class="today" id="today"></div>
+</div></section>
+
+<section class="band tgband"><div class="wrap">
+<a class="tgj" href="https://t.me/goaliopronos" target="_blank" rel="noopener"><span><strong>Les pronos aussi sur Telegram</strong><span>Le sûr et le fun chaque matin, les buteurs dès les compos, du live pendant les matchs.</span></span><b>Rejoindre</b></a>
 </div></section>
 
 <section class="band" id="chsec" hidden><div class="wrap">
