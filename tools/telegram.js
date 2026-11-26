@@ -4,6 +4,7 @@ const fs=require('fs');
 const mode=process.argv[2]||'daily';
 const h=fs.readFileSync('index.html','utf8');const s=h.split('<script>\n')[1].split('</script>')[0];
 const data=JSON.parse(fs.readFileSync('data.json','utf8'));
+const realFetch=global.fetch;
 const mk=()=>({innerHTML:'',textContent:'',hidden:false,clientWidth:800,clientHeight:300,style:{},classList:{add(){},remove(){}},querySelectorAll:()=>[],focus(){}});
 const els={};global.window={};global.document={getElementById:id=>els[id]||(els[id]=mk()),querySelector:()=>mk(),querySelectorAll:()=>[],addEventListener:()=>{},body:{style:{}}};
 global.matchMedia=()=>({matches:true});global.addEventListener=()=>{};global.ResizeObserver=class{observe(){}};global.IntersectionObserver=class{observe(){}};
@@ -21,7 +22,7 @@ const stateFile=process.env.STATE||'telegram_state.json';
 const state=fs.existsSync(stateFile)?JSON.parse(fs.readFileSync(stateFile,'utf8')):{daily:null,changes:[]};
 async function send(text){
   if(process.env.DRY){console.log(text+'\n-----');return}
-  const r=await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`,{method:'POST',headers:{'content-type':'application/json'},
+  const r=await realFetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`,{method:'POST',headers:{'content-type':'application/json'},
     body:JSON.stringify({chat_id:process.env.TELEGRAM_CHAT,text,parse_mode:'HTML',disable_web_page_preview:true})});
   const j=await r.json();if(!j.ok)throw new Error('Telegram : '+JSON.stringify(j));
 }
