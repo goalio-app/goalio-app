@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: "daily ou changes"
+        description: "daily ou push"
         default: daily
 
 permissions:
@@ -43,9 +43,9 @@ jobs:
       - name: Paris du jour
         if: steps.cfg.outputs.ok == 'true' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'daily'))
         run: node tools/telegram.js daily
-      - name: Pronos modifiés
-        if: steps.cfg.outputs.ok == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'changes'))
-        run: node tools/telegram.js changes
+      - name: Compos, direct et pronos modifiés
+        if: steps.cfg.outputs.ok == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'push'))
+        run: node tools/telegram.js push
       - name: Enregistrer ce qui a été publié
         if: steps.cfg.outputs.ok == 'true'
         run: |
