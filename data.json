@@ -1,6 +1,6 @@
 {
  "_format": "matches: [id, ligue, coup d'envoi UTC, domicile, exterieur, %dom|null (Sportradar, sinon cotes 1N2 des bookmakers converties en probabilités sans marge, sinon null), %nul|null, %ext|null, affiche 0/1, heure_a_confirmer 0/1, buteurs_seulement 0/1 (1 = match visible uniquement dans l onglet Buteurs, pas dans les pronos) (1 = heure inconnue, coup d envoi mis à 11:00Z du jour en attendant ; remplacer par l heure réelle et retirer le 1 dès qu elle est connue)]. watch: {id: [[joueur, equipe, part_des_buts_equipe]] ou [[joueur, equipe, buts|null, passes|null, matchs]]}. lineups: {id: {\"starters\": [noms des titulaires]}} -> les paris joueurs ne s'affichent qu'une fois les titulaires connus. montante: steps [date, match, pari, cote, resultat null|1|0]. history: [date, match, pari, cote, type fiable|fun|joueur|combine, resultat 1|0]. published: {id: {match, kickoff, fia:[pari,cote,proba], fun:[...]}} pronos figés pour le bilan. changes: {id: [{t: heure ISO UTC, why: une phrase en français avec le fait concret (qui est absent, quelle cote a bougé de X à Y), before: {fia: ancien prono fiable, fun: ancien prono fun}}]} -> historique des pronos modifiés ou confirmés avant le coup d envoi ; le site affiche le dernier sur la carte et tout l historique dans le détail du match. appodds: {id: [{m: libellé EXACT du marché sur le site (voir tools/list_markets.js), o: cote, bk: Winamax|Betclic|Unibet|PMU|Parions Sport|bet365, d: date du relevé AAAA-MM-JJ, src: source}]} -> vraies cotes des applis françaises, relevées sur des sources qui nomment le bookmaker ; jamais estimées.",
- "updated": "2026-11-26T17:05:26Z",
+ "updated": "2026-11-26T18:10:00Z",
  "source": "Sportradar et cotes bookmakers / modèles publics (DRatings) pour les coupes d'Europe · stats joueurs : ESPN (saison 2026-27)",
  "leagues": {
   "UCL": {
@@ -4459,5 +4459,27 @@
     "src": "SportyTrader"
    }
   ]
+ },
+ "live": {
+  "x2": [
+   {
+    "t": "2026-11-26T17:58:00Z",
+    "min": 12,
+    "score": "0-0",
+    "why": "Ramos (Milan) a dû être soigné après un choc vers la 9e minute.",
+    "fia": {
+     "t": "Olympiacos ou AC Milan",
+     "o": 1.41
+    },
+    "fun": {
+     "t": "Victoire AC Milan",
+     "o": 2.83
+    }
+   }
+  ]
+ },
+ "_sync": {
+  "t": "2026-11-26T18:12:00Z",
+  "github": "remote: access denied by the git proxy: goalio-app/goalio-app is not in this session's authorized repository set (HTTP 403) – la tâche planifiée n'a pas accès au dépôt"
  }
 }
