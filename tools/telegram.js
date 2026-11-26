@@ -18,7 +18,7 @@ const fx=o=>(+o).toFixed(2).replace('.',',');
 const hm=d=>d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',timeZone:TZ}).replace(':','h');
 const day=d=>d.toLocaleDateString('fr-FR',{timeZone:TZ});
 const wd=d=>d.toLocaleDateString('fr-FR',{weekday:'long',timeZone:TZ});
-const FOOT="\n\n<i>18+. Jouer comporte des risques : endettement, dépendance… Besoin d'aide : 09 74 75 13 13.</i>";
+const FOOT='';
 // petite variation de formulation, stable pour un même message
 const pickv=(arr,seed)=>{let h=0;for(const c of String(seed))h=(h*31+c.charCodeAt(0))>>>0;return arr[h%arr.length]};
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
