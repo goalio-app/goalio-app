@@ -1,0 +1,59 @@
+name: Canal Telegram
+
+on:
+  push:
+    branches: [main]
+    paths: [data.json]
+  schedule:
+    - cron: "20 10 * * *"   # 11 h 20 à Paris en hiver
+    - cron: "20 9 * * *"    # 11 h 20 à Paris en été
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "daily ou changes"
+        default: daily
+
+permissions:
+  contents: write
+
+concurrency:
+  group: telegram
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    env:
+      TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+      TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Vérifier la configuration
+        id: cfg
+        run: |
+          if [ -z "$TELEGRAM_TOKEN" ] || [ -z "$TELEGRAM_CHAT" ]; then
+            echo "Secrets TELEGRAM_TOKEN / TELEGRAM_CHAT absents : rien à publier."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Paris du jour
+        if: steps.cfg.outputs.ok == 'true' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'daily'))
+        run: node tools/telegram.js daily
+      - name: Pronos modifiés
+        if: steps.cfg.outputs.ok == 'true' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.mode == 'changes'))
+        run: node tools/telegram.js changes
+      - name: Enregistrer ce qui a été publié
+        if: steps.cfg.outputs.ok == 'true'
+        run: |
+          if [ -n "$(git status --porcelain telegram_state.json)" ]; then
+            git config user.name "Goalio"
+            git config user.email "goalio-app@users.noreply.github.com"
+            git add telegram_state.json
+            git commit -m "Telegram : messages publiés"
+            git pull --rebase origin main
+            git push origin main
+          fi
