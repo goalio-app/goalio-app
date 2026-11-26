@@ -4089,6 +4089,58 @@
     "Kluivert",
     "Álvaro Rodríguez"
    ]
+  },
+  "x6": {
+   "starters": [
+    "Henderson",
+    "Canvot",
+    "Richards",
+    "Disasi",
+    "Chilwell",
+    "Hughes",
+    "Timber",
+    "Kamada",
+    "Yeremy Pino",
+    "Nketiah",
+    "Mateta",
+    "Marrero",
+    "Fort",
+    "Martín",
+    "Sarr",
+    "Muñoz",
+    "Ochieng",
+    "Turrientes",
+    "Gorrotxategi",
+    "Guedes",
+    "Mikel Oyarzabal",
+    "Zakharyan"
+   ]
+  },
+  "x9": {
+   "starters": [
+    "Neto",
+    "Gatti",
+    "Lucumi",
+    "Kelly",
+    "Cabal",
+    "Douglas Luiz",
+    "Sarr",
+    "Cambiaso",
+    "Conceicao",
+    "Boga",
+    "Ekhator",
+    "Kaminski",
+    "Duverne",
+    "Coulibaly",
+    "Satka",
+    "Nego",
+    "Andreou",
+    "Maric",
+    "Tanase",
+    "Tankovic",
+    "Montnor",
+    "Kakoullis"
+   ]
   }
  },
  "montante": {
@@ -4479,7 +4531,7 @@
   ]
  },
  "_sync": {
-  "t": "2026-11-26T18:12:00Z",
-  "github": "remote: access denied by the git proxy: goalio-app/goalio-app is not in this session's authorized repository set (HTTP 403) – la tâche planifiée n'a pas accès au dépôt"
+  "t": "2026-11-26T19:10:19Z",
+  "github": "OK (outil add_repo absent de la session, mais dépôt déjà cloné : git fetch et push --dry-run réussis)"
  }
 }
