@@ -35,9 +35,39 @@ setTimeout(async()=>{
   const C=window.__cdp,now=new Date(),all=C.all();
   const fut=all.filter(m=>m.ph!=null&&!m.bo&&Date.now()<m.k.getTime()).sort((a,b)=>a.k-b.k);
   const out=[];
+  if(mode==='daily'||mode==='results'){
+    // Résultats : chaque prono noté dans history (gagné 1 / perdu 0), publié une seule fois
+    const H=(data.history||[]).filter(r=>r&&r.length>=6&&(r[5]===1||r[5]===0));
+    const keyOf=r=>'res|'+r[0]+'|'+r[1]+'|'+r[2];
+    const fresh=H.filter(r=>!sent.has(keyOf(r))&&/fiable|fun/.test(String(r[4])));
+    if(fresh.length){
+      const ok=fresh.filter(r=>r[5]===1).length,sf=fresh.filter(r=>/fiable/.test(r[4])),fn=fresh.filter(r=>/fun/.test(r[4]));
+      const line=r=>`${r[5]===1?'✅':'❌'} ${e(r[2])} @${fx(r[3])} <i>· ${e(r[1])}</i>`;
+      const order=[...fresh].sort((a,b)=>b[5]-a[5]||b[3]-a[3]);
+      let t=`📊 <b>Résultats d'hier : ${ok}/${fresh.length}</b>`;
+      const best=order.find(r=>r[5]===1&&r[3]>=2.5);
+      if(best)t+=`
+🔥 Le fun est passé : <b>${e(best[2])} @${fx(best[3])}</b>`;
+      t+=`
+
+`+order.slice(0,10).map(line).join('\n')+(order.length>10?`\n… et ${order.length-10} autres sur l'appli`:'');
+      const tot=H.filter(r=>/fiable|fun/.test(String(r[4]))),tw=tot.filter(r=>r[5]===1).length;
+      const pct=a=>a.length?Math.round(100*a.filter(r=>r[5]===1).length/a.length)+' %':'–';
+      t+=`
+
+🟡 Sûrs : ${sf.filter(r=>r[5]===1).length}/${sf.length} · 🔴 Fun : ${fn.filter(r=>r[5]===1).length}/${fn.length}`;
+      if(tot.length>fresh.length)t+=`
+📈 Depuis le début : ${tw}/${tot.length} (${pct(tot)})`;
+      t+=`
+
+On publie tout, même quand ça perd.`+FOOT;
+      await send(t);fresh.forEach(r=>sent.add(keyOf(r)));
+    }else console.log('Pas de nouveaux résultats.');
+  }
   if(mode==='daily'){
     const today=fut.filter(m=>day(m.k)===day(now));
-    if(!today.length||state.daily===day(now)){console.log('Rien à publier (pas de match ou déjà fait).');return}
+    if(!today.length||state.daily===day(now)){console.log('Paris du jour : rien à publier (pas de match ou déjà fait).')}
+    else{
     let sure=null,fun=null;today.forEach(m=>{const p=C.picks(m);if(!sure||p.fia.p>sure.x.p)sure={m,x:p.fia};if(!fun||p.fun.p>fun.x.p)fun={m,x:p.fun}});
     const big=today.find(m=>m.star)||today[0];
     const lgs=[...new Set(today.map(m=>data.leagues[m.lg].name))];
@@ -48,8 +78,8 @@ setTimeout(async()=>{
     if(st&&st[4]==null&&st[0]===now.toISOString().slice(0,10))t+=`\n\n📈 <b>MONTANTE</b> · étape ${mo.steps.length} · ${e(st[2])} <b>@${fx(st[3])}</b>`;
     else if(big&&big!==sure.m&&big!==fun.m){const p=C.picks(big);t+=`\n\n⭐ <b>L'AFFICHE</b> · ${short(big)} (${hm(big.k)})\n${e(p.fia.t)} <b>@${fx(p.fia.o)}</b>`}
     t+=`\n\n🎯 Les buteurs arrivent ici dès que les compos tombent.`+LINK('Tous les pronos')+FOOT;
-    await send(t);state.daily=day(now);
-  }else{
+    await send(t);state.daily=day(now);}
+  }else if(mode==='push'){
     // 1) compos tombées -> paris joueurs
     all.filter(m=>Date.now()<m.k.getTime()&&(data.lineups||{})[m.id]).forEach(m=>{
       const key='lu|'+m.id;if(sent.has(key))return;
