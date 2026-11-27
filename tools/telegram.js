@@ -52,7 +52,10 @@ setTimeout(async()=>{
      const pk=td.map(m=>({m,...C.picks(m)}));
      state.combos[isoT]={safe:[...pk].sort((a,b)=>b.fia.p-a.fia.p).slice(0,3).map(o=>nm(o.m)),fun:[...pk].sort((a,b)=>b.fun.p-a.fun.p).slice(0,3).map(o=>nm(o.m))};
    }}
-  if(mode==='daily'||mode==='results'){
+  // filet de sécurité si le cron GitHub ne part pas : le premier push après 11h envoie le bilan et les paris du jour
+  const hP=+now.toLocaleTimeString('fr-FR',{hour:'2-digit',hour12:false,timeZone:TZ}).slice(0,2);
+  const doDaily=mode==='daily'||(mode==='push'&&hP>=11&&state.daily!==today0);
+  if(doDaily||mode==='results'){
     const H=(data.history||[]).filter(r=>r&&r.length>=6&&(r[5]===1||r[5]===0));
     const keyOf=r=>'res|'+r[0]+'|'+r[1]+'|'+r[2];
     const fresh=H.filter(r=>!sent.has(keyOf(r))&&/fiable|fun/.test(String(r[4])));
@@ -94,7 +97,7 @@ setTimeout(async()=>{
       await send(t);fresh.forEach(r=>sent.add(keyOf(r)));marks.forEach(k=>sent.add(k));
     }else console.log('Pas de nouveaux résultats.');
   }
-  if(mode==='daily'){
+  if(doDaily){
     const today=fut.filter(m=>day(m.k)===today0);
     if(!today.length||state.daily===today0)console.log('Paris du jour : rien à publier.');
     else{
@@ -109,7 +112,8 @@ setTimeout(async()=>{
       await send(t);state.daily=today0;
       if(state.combos[isoT])state.combos[isoT].ff=nm(fun.m);
     }
-  }else if(mode==='push'){
+  }
+  if(mode==='push'){
     all.filter(m=>Date.now()<m.k.getTime()&&(data.lineups||{})[m.id]).forEach(m=>{
       const key='lu|'+m.id;if(sent.has(key))return;
       const P=C.players(m).filter(p=>p.st==='in');if(!P.length)return;
