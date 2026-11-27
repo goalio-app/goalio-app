@@ -1,11 +1,52 @@
 {
- "daily": "26/11/2026",
+ "daily": "27/11/2026",
  "sent": [
   "lu|x1",
   "lu|x2",
   "chg|x14|2026-11-26T10:11:46Z",
   "lv|x2|2026-11-26T17:58:00Z",
   "lu|x6",
-  "lv|x9|2026-11-26T21:14:00Z"
- ]
+  "lv|x9|2026-11-26T21:14:00Z",
+  "res|2026-11-26|Dinamo Zagreb – Leverkusen|Plus de 1,5 buts",
+  "res|2026-11-26|Dinamo Zagreb – Leverkusen|Leverkusen gagne sans encaisser",
+  "res|2026-11-26|Olympiacos – AC Milan|Olympiacos marque",
+  "res|2026-11-26|Olympiacos – AC Milan|Plus de 3,5 buts",
+  "res|2026-11-26|Beşiktaş – Hapoel Beer-Sheva|Plus de 1,5 buts",
+  "res|2026-11-26|Beşiktaş – Hapoel Beer-Sheva|Beşiktaş gagne et les deux équipes marquent",
+  "res|2026-11-26|Viktoria Plzeň – Benfica|Benfica ou nul",
+  "res|2026-11-26|Viktoria Plzeň – Benfica|Plus de 3,5 buts",
+  "res|2026-11-26|Union Saint-Gilloise – Lech Poznań|Union Saint-Gilloise ou Lech Poznań",
+  "res|2026-11-26|Union Saint-Gilloise – Lech Poznań|Plus de 3,5 buts",
+  "res|2026-11-26|Salzbourg – Ararat-Arménie|Victoire Salzbourg",
+  "res|2026-11-26|Salzbourg – Ararat-Arménie|Salzbourg gagne et les deux équipes marquent",
+  "res|2026-11-26|Marseille – Levski Sofia|Marseille ou Levski Sofia",
+  "res|2026-11-26|Marseille – Levski Sofia|Exactement 2 buts",
+  "res|2026-11-26|Celta Vigo – Bournemouth|Bournemouth marque",
+  "res|2026-11-26|Celta Vigo – Bournemouth|Mi-temps Bournemouth / fin Bournemouth",
+  "res|2026-11-26|Crystal Palace – Real Sociedad|Crystal Palace marque",
+  "res|2026-11-26|Crystal Palace – Real Sociedad|Crystal Palace gagne et plus de 2,5 buts",
+  "res|2026-11-26|Juventus – Omonia Nicosie|Juventus marque le premier but",
+  "res|2026-11-26|Juventus – Omonia Nicosie|Exactement 2 buts",
+  "res|2026-11-26|Hoffenheim – Sturm Graz|Hoffenheim ou Sturm Graz",
+  "res|2026-11-26|Hoffenheim – Sturm Graz|Hoffenheim gagne et les deux équipes marquent",
+  "res|2026-11-26|Sparta Prague – AZ Alkmaar|But en 1re mi-temps",
+  "res|2026-11-26|Sparta Prague – AZ Alkmaar|Mi-temps AZ Alkmaar / fin AZ Alkmaar",
+  "res|2026-11-26|Fribourg – Twente|Plus de 1,5 buts",
+  "res|2026-11-26|Fribourg – Twente|Plus de 3,5 buts"
+ ],
+ "combos": {
+  "2026-11-27": {
+   "safe": [
+    "Werder Brême – Gladbach",
+    "Levante – Racing Santander",
+    "Venise – Bologne"
+   ],
+   "fun": [
+    "Brest – Paris FC",
+    "Nottingham Forest – Chelsea",
+    "Werder Brême – Gladbach"
+   ],
+   "ff": "Brest – Paris FC"
+  }
+ }
 }
