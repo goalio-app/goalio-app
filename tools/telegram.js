@@ -44,16 +44,54 @@ setTimeout(async()=>{
   const C=window.__cdp,now=new Date(),all=C.all();
   const fut=all.filter(m=>m.ph!=null&&!m.bo&&Date.now()<m.k.getTime()).sort((a,b)=>a.k-b.k);
   const today0=day(now),out=[];
+  // combinés du jour figés (mêmes règles que l'onglet Combinés), pour en donner le résultat le lendemain
+  const iso=d=>d.toLocaleDateString('sv-SE',{timeZone:TZ}),nm=m=>`${m.h} – ${m.a}`,isoT=iso(now);
+  state.combos=state.combos||{};
+  {const td=all.filter(m=>m.ph!=null&&!m.bo&&iso(m.k)===isoT);
+   if(!state.combos[isoT]&&td.length>=2&&td.every(m=>Date.now()<m.k.getTime())){
+     const pk=td.map(m=>({m,...C.picks(m)}));
+     state.combos[isoT]={safe:[...pk].sort((a,b)=>b.fia.p-a.fia.p).slice(0,3).map(o=>nm(o.m)),fun:[...pk].sort((a,b)=>b.fun.p-a.fun.p).slice(0,3).map(o=>nm(o.m))};
+   }}
   if(mode==='daily'||mode==='results'){
     const H=(data.history||[]).filter(r=>r&&r.length>=6&&(r[5]===1||r[5]===0));
     const keyOf=r=>'res|'+r[0]+'|'+r[1]+'|'+r[2];
     const fresh=H.filter(r=>!sent.has(keyOf(r))&&/fiable|fun/.test(String(r[4])));
-    if(fresh.length){
-      const ok=fresh.filter(r=>r[5]===1).length,order=[...fresh].sort((a,b)=>b[5]-a[5]||b[3]-a[3]);
-      let t=`Hier : ${ok}/${fresh.length} ${ok/fresh.length>=.6?'✅':''}\n`+order.slice(0,6).map(r=>`${r[5]===1?'✅':'❌'} ${e(r[2])} · ${fx(r[3])}`).join('\n');
+    const extra=[],marks=[];
+    // pari fun du jour et combinés
+    Object.entries(state.combos).forEach(([d,c])=>{
+      if(d>=isoT||sent.has('cb|'+d))return;
+      const row=(n,ty)=>H.find(r=>r[0]===d&&r[1]===n&&r[4]===ty);
+      const old=(Date.parse(isoT)-Date.parse(d))/864e5>3;
+      let done=true;
+      if(c.ff){const r=row(c.ff,'fun');if(r)extra.push(`🔥 Le fun : ${e(r[2])} · ${fx(r[3])} ${r[5]?'✅':'❌'}`);else done=false}
+      [['safe','fiable','Combiné fiable'],['fun','fun','Combiné fun']].forEach(([k,ty,lab])=>{
+        const legs=(c[k]||[]).map(n=>row(n,ty));if((c[k]||[]).length<2)return;
+        const lost=legs.some(r=>r&&r[5]===0),all1=legs.every(r=>r&&r[5]===1);
+        if(lost||all1)extra.push(`🧩 ${lab} · ${fx(legs.filter(Boolean).reduce((a,r)=>a*r[3],1))} ${all1?'✅':'❌'}`);else done=false;
+      });
+      if(done||old)marks.push('cb|'+d);
+      if(old)delete state.combos[d];
+    });
+    // montante
+    const mo=data.montante;
+    if(mo&&mo.steps){let bank=mo.start,n=0;
+      mo.steps.forEach((st,i)=>{if(st[4]!==1&&st[4]!==0)return;n++;
+        const won=st[4]===1;bank=won?bank*st[3]:mo.start;
+        const key='mo|'+st[0]+'|'+i;if(sent.has(key)||st[0]>=isoT){if(!won)n=0;return}
+        extra.push(won?`📈 Montante étape ${n} ✅ · ${fx(bank)} € (objectif ${mo.target} €)`:`📈 Montante étape ${n} ❌ · on repart à ${mo.start} €`);
+        marks.push(key);if(!won)n=0;
+      });
+    }
+    if(fresh.length||extra.length){
+      let t='';
+      if(fresh.length){
+        const ok=fresh.filter(r=>r[5]===1).length,order=[...fresh].sort((a,b)=>b[5]-a[5]||b[3]-a[3]);
+        t=`Hier : ${ok}/${fresh.length} ${ok/fresh.length>=.6?'✅':''}\n`+order.slice(0,4).map(r=>`${r[5]===1?'✅':'❌'} ${e(r[2])} · ${fx(r[3])}`).join('\n');
+      }
+      if(extra.length)t+=(t?'\n\n':'')+extra.join('\n');
       const tot=H.filter(r=>/fiable|fun/.test(String(r[4]))),tw=tot.filter(r=>r[5]===1).length;
-      if(tot.length>fresh.length)t+=`\nDepuis le début : ${Math.round(100*tw/tot.length)} %`;
-      await send(t);fresh.forEach(r=>sent.add(keyOf(r)));
+      if(tot.length>fresh.length)t+=`\n\nDepuis le début : ${Math.round(100*tw/tot.length)} %`;
+      await send(t);fresh.forEach(r=>sent.add(keyOf(r)));marks.forEach(k=>sent.add(k));
     }else console.log('Pas de nouveaux résultats.');
   }
   if(mode==='daily'){
@@ -69,6 +107,7 @@ setTimeout(async()=>{
       if(st&&st[4]==null&&st[0]===now.toISOString().slice(0,10))t+=`\n\n📈 Montante : ${e(st[2])} · ${fx(st[3])}`;
       t+=`\n\nButeurs dès les compos.`+LINK('Tout sur l\'appli');
       await send(t);state.daily=today0;
+      if(state.combos[isoT])state.combos[isoT].ff=nm(fun.m);
     }
   }else if(mode==='push'){
     all.filter(m=>Date.now()<m.k.getTime()&&(data.lineups||{})[m.id]).forEach(m=>{
