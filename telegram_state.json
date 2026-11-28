@@ -1,5 +1,5 @@
 {
- "daily": "27/11/2026",
+ "daily": "28/11/2026",
  "sent": [
   "lu|x1",
   "lu|x2",
@@ -32,7 +32,19 @@
   "res|2026-11-26|Sparta Prague – AZ Alkmaar|But en 1re mi-temps",
   "res|2026-11-26|Sparta Prague – AZ Alkmaar|Mi-temps AZ Alkmaar / fin AZ Alkmaar",
   "res|2026-11-26|Fribourg – Twente|Plus de 1,5 buts",
-  "res|2026-11-26|Fribourg – Twente|Plus de 3,5 buts"
+  "res|2026-11-26|Fribourg – Twente|Plus de 3,5 buts",
+  "res|2026-11-27|Werder Brême – Gladbach|Werder Brême marque",
+  "res|2026-11-27|Werder Brême – Gladbach|Plus de 3,5 buts",
+  "res|2026-11-27|Brest – Paris FC|Moins de 3,5 buts",
+  "res|2026-11-27|Brest – Paris FC|Mi-temps Paris FC / fin Paris FC",
+  "res|2026-11-27|Venise – Bologne|Moins de 3,5 buts",
+  "res|2026-11-27|Venise – Bologne|Bologne gagne sans encaisser",
+  "res|2026-11-27|Nottingham Forest – Chelsea|Nottingham Forest ou Chelsea",
+  "res|2026-11-27|Nottingham Forest – Chelsea|Exactement 2 buts",
+  "res|2026-11-27|Levante – Racing Santander|Levante marque",
+  "res|2026-11-27|Levante – Racing Santander|Levante gagne et plus de 2,5 buts",
+  "cb|2026-11-27",
+  "mo|2026-11-27|0"
  ],
  "combos": {
   "2026-11-27": {
@@ -58,7 +70,9 @@
     "Torino – Lazio",
     "Inter – Genoa",
     "Betis – Rayo Vallecano"
-   ]
+   ],
+   "ff": "Torino – Lazio",
+   "ft": "Premier but avant la 15e minute"
   }
  }
 }
