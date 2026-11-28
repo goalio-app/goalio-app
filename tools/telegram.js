@@ -66,7 +66,7 @@ setTimeout(async()=>{
       const row=(n,ty)=>H.find(r=>r[0]===d&&r[1]===n&&r[4]===ty);
       const old=(Date.parse(isoT)-Date.parse(d))/864e5>3;
       let done=true;
-      if(c.ff){const r=row(c.ff,'fun');if(r)extra.push(`🔥 Le fun : ${e(r[2])} · ${fx(r[3])} ${r[5]?'✅':'❌'}`);else done=false}
+      if(c.ff&&c.ft){const r=row(c.ff,'fun');if(r&&r[2]!==c.ft){}else if(r)extra.push(`🔥 Le fun : ${e(r[2])} · ${fx(r[3])} ${r[5]?'✅':'❌'}`);else done=false}
       [['safe','fiable','Combiné fiable'],['fun','fun','Combiné fun']].forEach(([k,ty,lab])=>{
         const legs=(c[k]||[]).map(n=>row(n,ty));if((c[k]||[]).length<2)return;
         const lost=legs.some(r=>r&&r[5]===0),all1=legs.every(r=>r&&r[5]===1);
@@ -110,7 +110,7 @@ setTimeout(async()=>{
       if(st&&st[4]==null&&st[0]===now.toISOString().slice(0,10))t+=`\n\n📈 Montante : ${e(st[2])} · ${fx(st[3])}`;
       t+=`\n\nButeurs dès les compos.`+LINK('Tout sur l\'appli');
       await send(t);state.daily=today0;
-      if(state.combos[isoT])state.combos[isoT].ff=nm(fun.m);
+      if(state.combos[isoT])Object.assign(state.combos[isoT],{ff:nm(fun.m),ft:fun.x.t});
     }
   }
   if(mode==='push'){
